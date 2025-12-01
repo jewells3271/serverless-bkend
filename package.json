@@ -1,0 +1,13 @@
+{
+  "name": "kompanion-oauth-backend",
+  "version": "1.0.0",
+  "description": "Minimal serverless backend for KompanionAI OAuth token exchange",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["oauth", "google-calendar", "serverless"],
+  "author": "",
+  "license": "MIT"
+}
