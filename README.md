@@ -11,15 +11,29 @@ This tiny backend keeps your Google OAuth Client Secret secure. Your local-first
 - ✅ Single endpoint: `/api/calendar-token`
 - ✅ Stateless (no database required)
 - ✅ ~120 lines of code
-- ✅ Free tier compatible
+- ✅ Free tier compatible (Render)
 - ✅ Handles token exchange and refresh
 
-## Current Deployment
+## Deployment Options
 
-**Your backend is deployed on Render at:**
-```
-https://serverless-bkend.onrender.com
-```
+### Option 1: Render (Recommended)
+
+1. **Create New Web Service** on Render.com
+
+2. **Connect Repository** or upload this folder
+
+3. **Configure**:
+   - Build Command: (leave empty)
+   - Start Command: (leave empty - it's serverless)
+   - Add Environment Variables:
+     - `GOOGLE_CLIENT_ID`
+     - `GOOGLE_CLIENT_SECRET`
+
+4. **Deploy** and get your URL
+
+### Option 2: Railway/Fly.io/Netlify
+
+Similar process - just deploy the `serverless-backend` folder and set environment variables.
 
 ## Getting Google OAuth Credentials
 
@@ -73,23 +87,6 @@ https://serverless-bkend.onrender.com
 }
 ```
 
-## Render Deployment Configuration
-
-Your backend is already deployed on Render. If you need to redeploy or update:
-
-### Environment Variables on Render
-
-Make sure these are set in your Render dashboard:
-
-- `GOOGLE_CLIENT_ID`: Your Google OAuth Client ID
-- `GOOGLE_CLIENT_SECRET`: Your Google OAuth Client Secret (NEVER commit this!)
-
-### Render Service Configuration
-
-- **Build Command**: (leave empty - no build needed)
-- **Start Command**: (leave empty - serverless function)
-- **Environment**: Node 18+
-
 ## Security Notes
 
 - ✅ Client Secret never leaves the server
@@ -97,29 +94,42 @@ Make sure these are set in your Render dashboard:
 - ✅ No data storage (stateless)
 - ✅ Only handles token exchange
 
+## Cost
+
+- **Render**: Free tier (750 hours/month)
+- **Railway**: $5/month credit (free trial)
+
+For a single-user app, free tier is more than enough.
+
+## Testing Locally
+
+```bash
+npm install
+npm run dev
+```
+
+Your endpoint will be available at `http://localhost:3000/api/calendar-token`
+
+## Environment Variables
+
+Create a `.env` file (DO NOT COMMIT):
+
+```env
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+```
+
 ## Troubleshooting
 
 **"Missing OAuth credentials" error:**
-- Check environment variables are set in your Render dashboard
+- Check environment variables are set in your deployment platform
 
 **CORS errors:**
-- Update `Access-Control-Allow-Origin` in `api/calendar-token.js` to your PWA domain
-- For local development, `*` (allow all) is fine
+- Update `Access-Control-Allow-Origin` in `calendar-token.js` to your PWA domain
 
 **Token exchange failed:**
 - Verify redirect URI matches exactly what you configured in Google Console
 - Check that Google Calendar API is enabled
-- Make sure your Render backend is awake (free tier sleeps after inactivity)
-
-## Alternative Deployment Platforms
-
-While this is deployed on Render, you can also deploy to:
-
-- **Vercel**: `vercel` (requires Vercel CLI)
-- **Netlify**: Drag and drop the `serverless-backend` folder
-- **Railway**: Connect GitHub repo
-
-All platforms need the same environment variables.
 
 ## Future Extensions
 
