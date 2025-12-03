@@ -132,7 +132,7 @@ app.post('/api/calendar-refresh', async (req, res) => {
   }
 });
 
-});
+
 
 // --- Email Endpoints ---
 
@@ -142,14 +142,14 @@ const imaps = require('imap-simple');
 // Send Email
 app.post('/api/email/send', async (req, res) => {
   try {
-    const { 
-      smtpServer, 
-      smtpPort, 
-      smtpUser, 
-      smtpPassword, 
-      to, 
-      subject, 
-      text 
+    const {
+      smtpServer,
+      smtpPort,
+      smtpUser,
+      smtpPassword,
+      to,
+      subject,
+      text
     } = req.body;
 
     if (!smtpServer || !smtpUser || !smtpPassword || !to || !subject || !text) {
@@ -184,12 +184,12 @@ app.post('/api/email/send', async (req, res) => {
 // Check Emails
 app.post('/api/email/check', async (req, res) => {
   try {
-    const { 
-      imapServer, 
-      imapPort, 
-      imapUser, 
-      imapPassword, 
-      limit = 5 
+    const {
+      imapServer,
+      imapPort,
+      imapUser,
+      imapPassword,
+      limit = 5
     } = req.body;
 
     if (!imapServer || !imapUser || !imapPassword) {
@@ -228,7 +228,7 @@ app.post('/api/email/check', async (req, res) => {
     // For now, let's just fetch and slice in memory (careful with large inboxes).
     // BETTER: Use delay to get only recent? 
     // Let's use ['1:*'] range if we knew the count.
-    
+
     // Let's just fetch the last 'limit' messages using sequence numbers if possible.
     // imap-simple doesn't expose sequence fetch easily with search.
     // Let's just search for messages since yesterday?
@@ -238,7 +238,7 @@ app.post('/api/email/check', async (req, res) => {
     const searchCriteriaDate = [['SINCE', yesterday]];
 
     const messages = await connection.search(searchCriteriaDate, fetchOptions);
-    
+
     // Sort by date descending
     messages.sort((a, b) => {
       return new Date(b.attributes.date) - new Date(a.attributes.date);
@@ -247,7 +247,7 @@ app.post('/api/email/check', async (req, res) => {
     const recentMessages = messages.slice(0, limit).map(msg => {
       const header = msg.parts.find(part => part.which === 'HEADER');
       const body = msg.parts.find(part => part.which === 'TEXT');
-      
+
       return {
         from: header.body.from[0],
         subject: header.body.subject[0],
