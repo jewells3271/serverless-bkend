@@ -152,20 +152,35 @@ app.post('/api/email/send', async (req, res) => {
       text
     } = req.body;
 
+    console.log('📧 Email send request received:', {
+      smtpServer,
+      smtpPort,
+      smtpUser: smtpUser ? '***' : undefined,
+      to,
+      subject
+    });
+
     if (!smtpServer || !smtpUser || !smtpPassword || !to || !subject || !text) {
+      console.error('❌ Missing required email parameters');
       return res.status(400).json({ error: 'Missing required email parameters' });
     }
 
+    const port = parseInt(smtpPort) || 587;
+
     const transporter = nodemailer.createTransport({
       host: smtpServer,
-      port: smtpPort || 587,
-      secure: smtpPort === 465, // true for 465, false for other ports
+      port: port,
+      secure: port === 465, // true for 465, false for other ports
       auth: {
         user: smtpUser,
         pass: smtpPassword,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
+    console.log('📤 Attempting to send email...');
     const info = await transporter.sendMail({
       from: smtpUser,
       to,
@@ -173,10 +188,11 @@ app.post('/api/email/send', async (req, res) => {
       text,
     });
 
+    console.log('✅ Email sent successfully:', info.messageId);
     res.json({ success: true, messageId: info.messageId });
 
   } catch (error) {
-    console.error('Send email error:', error);
+    console.error('❌ Send email error:', error);
     res.status(500).json({ error: 'Failed to send email', details: error.message });
   }
 });
